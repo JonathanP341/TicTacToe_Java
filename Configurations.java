@@ -1,14 +1,20 @@
 import java.util.*;
+/**
+ * This is a class to store the game board and all related methods
+ *
+ * Date: February 16th 2024
+ * @author Jonathan Peters
+ */
 public class Configurations {
     private int boardSize; //Specifies size of the board
     private int lengthToWin; //Length of the sequence needed to win the game
     private int maxLevels; //Maximum level of the game tree that will be explored
-    char[][] gameBoard; //Storing the game board
+    private char[][] gameBoard; //Storing the game board
 
     public Configurations(int board, int length, int max) {
         this.boardSize = board;
-        lengthToWin = length;
-        maxLevels = max;
+        this.lengthToWin = length;
+        this.maxLevels = max;
         gameBoard = new char[boardSize][boardSize];
         //Setting every value in the game
         for (int i = 0; i < boardSize; i++) {
@@ -18,11 +24,23 @@ public class Configurations {
         }
     }
 
+    /**
+     * Name: createDictionary
+     * Create a dictionary of a given size 9883
+     *
+     * @return Hashdictionary - Empty dictionary
+     */
     public HashDictionary createDictionary() {
-        HashDictionary myDictionary = new HashDictionary(7879);
+        HashDictionary myDictionary = new HashDictionary(9883);
         return myDictionary;
     }
 
+    /**
+     * Name: repeatedConfiguration
+     * Getting a configuration and checking if its repeated
+     * @param hashDictionary - Given dictionary
+     * @return int - -1 if unique or the score if not repeated
+     */
     public int repeatedConfiguration(HashDictionary hashDictionary) {
         //Getting and storing the board in a string
         String boardString = boardToString();
@@ -30,6 +48,12 @@ public class Configurations {
         return hashDictionary.get(boardString);
     }
 
+    /**
+     * Name: addConfiguration
+     * Adding the configuration to the dictionary
+     * @param hashDictionary - The given dictionary
+     * @param score - The score of the move to be stored in the dictionary
+     */
     public void addConfiguration(HashDictionary hashDictionary, int score) {
         //Getting and storing the board in a string
         String boardString = boardToString();
@@ -38,10 +62,24 @@ public class Configurations {
         hashDictionary.put(data);
     }
 
+    /**
+     * Name: savePlay
+     * Saving the play
+     * @param row - Row of the play
+     * @param col - Column of the play
+     * @param symbol - The symbol of the move
+     */
     public void savePlay(int row, int col, char symbol) {
         gameBoard[row][col] = symbol;
     }
 
+    /**
+     * Name: squareIsEmpty
+     * Checking if the given square is empty
+     * @param row - Row of the play
+     * @param col - Column of the play
+     * @return boolean - Returning if the square is empty
+     */
     public boolean squareIsEmpty(int row, int col) {
         if (gameBoard[row][col] == ' ') {
             return true;
@@ -49,6 +87,12 @@ public class Configurations {
         return false;
     }
 
+    /**
+     * Name: wins
+     * Checks if given symbol won the game
+     * @param symbol - Check if this symbol won the game
+     * @return boolean - If they won
+     */
     public boolean wins (char symbol) {
         String boardString = boardToString(); //Incase I need it
         int run = 0; //Holding how many values in a row they got
@@ -123,6 +167,11 @@ public class Configurations {
         return false;
     }
 
+    /**
+     * Name: isDraw
+     * Determines if the board is a draw
+     * @return boolean - If its a draw
+     */
     public boolean isDraw() {
         String boardString = boardToString();
         if (boardString.contains(" ")) { //If there is a space left to place, return false
@@ -134,6 +183,11 @@ public class Configurations {
         return true; //Otherwise, return true as its a draw
     }
 
+    /**
+     * Name: evalBoard
+     * Evaluate how good a move is
+     * @return int - Score of the move
+     */
     public int evalBoard() {
         if (wins('O')) { //If the computer won
             return 3;
@@ -147,6 +201,12 @@ public class Configurations {
             return 1;
         }
     }
+
+    /**
+     * Name: boardtoString
+     * Convert the game board to a string
+     * @return String - The configuration of the board
+     */
     private String boardToString() {
         //Storing the board
         String s = "";

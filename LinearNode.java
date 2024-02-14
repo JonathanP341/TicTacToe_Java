@@ -1,8 +1,8 @@
 /**
  * LinearNode represents a node in a linked list.
  *
+ * Date: February 16th 2024
  * @author Jonathan Peters
- * @version 1.0, 08/13/08
  */
 public class LinearNode<T> {
     private LinearNode<T> next;

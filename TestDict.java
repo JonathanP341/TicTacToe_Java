@@ -118,6 +118,8 @@ public class TestDict {
                     for (j = 0; j < 5; ++j) s += s;
                     collisions += dict.put(new Data(s,i));
                 }
+                System.out.println(collisions);
+                System.out.println(dict.numRecords());
                 if (test[7]) System.out.println("   Test 7 succeeded");
             } catch (DictionaryException e) {
                 if (test[7]) System.out.println("***Test 7 failed");
@@ -165,9 +167,10 @@ public class TestDict {
             catch (DictionaryException e) {
                 System.out.println("***Test 9 failed");
             }
-
+        System.out.println(dict.numRecords());
         //Test 10: Number of collisions
         if (test[10])
+            System.out.println(collisions);
             if (collisions >= 2800) {
                 System.out.println("***Test 10 failed");
                 System.out.println("Too many collisions: "+collisions);

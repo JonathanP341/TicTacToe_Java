@@ -1,14 +1,35 @@
 import java.util.*;
+/**
+ * This is the class to create the hash dictionary used to store the possible moves for the computer
+ *
+ * Class: CS2210
+ * Date: February 16th 2024
+ * @author Jonathan Peters
+ */
 public class HashDictionary implements DictionaryADT {
-    private int sizeArray;
+    private int sizeArray; //Stores the size of the array
     LinearNode<Data>[] record; //Might have to increase this by a LOT
-    private static final int HASH_VALUE_MULTIPLE = 73; //Experimentally 33,37,39,41 work best
+    private static final int HASH_VALUE_MULTIPLE = 97; //Choosing constant hash multiple to store the keys in a pseudo random spot in the array
     private int recordsInDict = 0; //Storing the number of records in the array
 
+    /**
+     * Name: HashDictionary
+     * Returns an empty hashArray
+     * @param size - size of the empty dictionary
+     */
     public HashDictionary(int size) {
         sizeArray = size;
         record = new LinearNode[sizeArray];
     }
+
+    /**
+     * Name: put
+     * Adds a record to the dictionary
+     * Must throw an exception if the pair is already in the record
+     * @param pair - Data to put into the
+     * @return 1 or 0 depending on if there is a collision or not
+     * @throws DictionaryException
+     */
     public int put(Data pair) throws DictionaryException {
         //To put the information into the hash map I will use Horner's Algorithm to accurately map it to its own special part of the dictionary
         //The position in the dictionary to map the function to
@@ -26,9 +47,11 @@ public class HashDictionary implements DictionaryADT {
             //Setting a variable to loop through the linear node
             LinearNode<Data> counter = record[pos];
 
+            //Checking if the first node is equal to the value we are attempting to put into the record
             if (counter.getElement().getConfiguration().equals(pair.getConfiguration())) {
                 throw new DictionaryException();//Throw exception if pair is already stored in the dictionary
             }
+            //Looping through the linear nodes to find if the value is already present
             while (counter.getNext() != null) {
                 if (counter.getElement().getConfiguration().equals(pair.getConfiguration())) {
                     throw new DictionaryException();//Throw exception if pair is already stored in the dictionary
@@ -44,7 +67,13 @@ public class HashDictionary implements DictionaryADT {
         }
     }
 
-
+    /**
+     * Name: remove
+     * Removing an element from the record
+     * Throws an exception if the board configuration is not present in the record
+     * @param config - The board stored in a string
+     * @throws DictionaryException - Throws an exception if the value is not present
+     */
     public void remove(String config) throws DictionaryException {
         //Getting the position of the string
         int pos = getPosition(config);
@@ -68,6 +97,7 @@ public class HashDictionary implements DictionaryADT {
                 }
                 counter = counter.getNext(); //Increasing counter by 1 so its ahead of previous
 
+                //Using a do while loop properly check each element of the linked list without skipping any values
                 do {
                     if (counter.getElement().getConfiguration().equals(config)) { //If the configurations are the same
                         previous.setNext(counter.getNext());
@@ -88,6 +118,13 @@ public class HashDictionary implements DictionaryADT {
         }
     }
 
+    /**
+     * Name: get
+     * Getting the score from the configuration stored in the record
+     * If the configuration does not exist in the record, throw an exception
+     * @param config - Board in a string
+     * @return int - Return the score of the configuration
+     */
     public int get(String config) {
         //Getting the position of the string
         int pos = getPosition(config);
@@ -109,7 +146,12 @@ public class HashDictionary implements DictionaryADT {
         }
     }
 
-
+    /**
+     * Name: getPosition
+     * Get the position the configuration was stored in the array
+     * @param config - The game board in a string
+     * @return int - The position of the data in the array
+     */
     private int getPosition(String config) {
         //The position in the dictionary to map the function to
         int pos = (int)config.charAt(0);
@@ -121,6 +163,11 @@ public class HashDictionary implements DictionaryADT {
         return pos;
     }
 
+    /**
+     * Name: numRecords
+     * Return the number of records in the array
+     * @return int - number of records in the array
+     */
     public int numRecords() {
         return recordsInDict;
     }
