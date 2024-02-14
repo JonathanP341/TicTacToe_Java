@@ -3,12 +3,13 @@ public class Configurations {
     private int boardSize; //Specifies size of the board
     private int lengthToWin; //Length of the sequence needed to win the game
     private int maxLevels; //Maximum level of the game tree that will be explored
-    char[][] gameBoard = new char[boardSize][boardSize]; //Storing the game board
+    char[][] gameBoard; //Storing the game board
 
     public Configurations(int board, int length, int max) {
         this.boardSize = board;
         lengthToWin = length;
         maxLevels = max;
+        gameBoard = new char[boardSize][boardSize];
         //Setting every value in the game
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {

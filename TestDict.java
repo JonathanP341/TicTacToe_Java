@@ -112,9 +112,9 @@ public class TestDict {
         // Test 7: insert 10000 different records into the Dictionary
         if (test[7] || test[8] || test[9] || test[10])
             try {
-                for (i = 0; i < 10000; ++i) {
+                for (i = 0; i < 10000; ++i) { //Should be 10000
                     s = Integer.toString(i);
-                    System.out.println(s);
+                    //System.out.println(s);
                     for (j = 0; j < 5; ++j) s += s;
                     collisions += dict.put(new Data(s,i));
                 }
@@ -130,6 +130,7 @@ public class TestDict {
             for (i = 0; i < 10000; ++i) {
                 s = Integer.toString(i);
                 for (j = 0; j < 5; ++j) s += s;
+                //System.out.println(dict.get(s));
                 if (dict.get(s) == -1) {
                     System.out.println("***Test 8 failed");
                     passed = false;

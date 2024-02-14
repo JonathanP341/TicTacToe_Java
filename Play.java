@@ -48,7 +48,7 @@ public class Play extends JFrame {
     }
 
 
-    /* To run the program type: java Play size length depth where 
+    /* To run the program type: java Play size length depth where
        size is the size of the board, length is the length of the X-shape of +shape
        needed to win the game, and depth is the number of levels of the game tree
        to be explored.                   */
@@ -61,8 +61,8 @@ public class Play extends JFrame {
                     ("Usage: java Play board-size shape-length depth");
             System.exit(0);
         }
-//	String[] args2 = {"5", "5", "4"};
-//	args = args2;
+        //String[] args2 = {"5", "5", "4"};
+	    //args = args2;
         /* Size of the game board */
         int size = Integer.parseInt(args[0]);
 

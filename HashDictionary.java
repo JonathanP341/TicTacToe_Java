@@ -2,7 +2,7 @@ import java.util.*;
 public class HashDictionary implements DictionaryADT {
     private int sizeArray;
     LinearNode<Data>[] record; //Might have to increase this by a LOT
-    private static final int HASH_VALUE_MULTIPLE = 33; //Experimentally 33,37,39,41 work best
+    private static final int HASH_VALUE_MULTIPLE = 73; //Experimentally 33,37,39,41 work best
     private int recordsInDict = 0; //Storing the number of records in the array
 
     public HashDictionary(int size) {
@@ -25,12 +25,16 @@ public class HashDictionary implements DictionaryADT {
             //If the array is NOT empty, then we have to search through the linked list to try and find if the configuration has already been stored
             //Setting a variable to loop through the linear node
             LinearNode<Data> counter = record[pos];
-            do {
+
+            if (counter.getElement().getConfiguration().equals(pair.getConfiguration())) {
+                throw new DictionaryException();//Throw exception if pair is already stored in the dictionary
+            }
+            while (counter.getNext() != null) {
                 if (counter.getElement().getConfiguration().equals(pair.getConfiguration())) {
                     throw new DictionaryException();//Throw exception if pair is already stored in the dictionary
                 }
                 counter = counter.getNext(); //Going to next node if error not thrown
-            } while (counter.getNext() != null);
+            }
 
             //If we get to the end of the loop with no errors
             LinearNode<Data> linkedPair = new LinearNode<Data>(pair); //Make the next node
@@ -84,7 +88,6 @@ public class HashDictionary implements DictionaryADT {
         }
     }
 
-
     public int get(String config) {
         //Getting the position of the string
         int pos = getPosition(config);
@@ -94,12 +97,14 @@ public class HashDictionary implements DictionaryADT {
             return -1;
         } else { //Otherwise if there is a linked list
             //Looping through the linked list with a do-while loop to make sure it looks at the first node
-            do {
+            while(counter != null) {
                 if (counter.getElement().getConfiguration().equals(config)) { //If the configurations are the same
                     return counter.getElement().getScore(); //Return the score of the move
                 }
                 counter = counter.getNext(); //Going to the next node
-            } while(counter.getNext() != null);
+            }
+
+
             return -1; //If it goes through the whole loop without finding a match, return -1
         }
     }
