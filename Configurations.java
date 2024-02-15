@@ -11,11 +11,18 @@ public class Configurations {
     private int maxLevels; //Maximum level of the game tree that will be explored
     private char[][] gameBoard; //Storing the game board
 
+    /**
+     * Name: Configurations
+     * Constructor for the class
+     * @param board - size of the board
+     * @param length - length needed to win
+     * @param max - Maximum levels the tree will explore
+     */
     public Configurations(int board, int length, int max) {
         this.boardSize = board;
         this.lengthToWin = length;
         this.maxLevels = max;
-        gameBoard = new char[boardSize][boardSize];
+        gameBoard = new char[boardSize][boardSize]; //Initializing the game board
         //Setting every value in the game
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
@@ -81,10 +88,7 @@ public class Configurations {
      * @return boolean - Returning if the square is empty
      */
     public boolean squareIsEmpty(int row, int col) {
-        if (gameBoard[row][col] == ' ') {
-            return true;
-        }
-        return false;
+        return gameBoard[row][col] == ' ';
     }
 
     /**
@@ -94,7 +98,96 @@ public class Configurations {
      * @return boolean - If they won
      */
     public boolean wins (char symbol) {
-        String boardString = boardToString(); //Incase I need it
+        return (horizontalWin(symbol) || verticalWin(symbol) || diagonalWin(symbol) || reverseDiagonalWin(symbol));
+    }
+
+    /**
+     * Name: diagonalWin
+     * Checking if the user won with a diagonal
+     * @param symbol - Checking if this symbol won
+     * @return boolean - If the symbol won
+     */
+    private boolean diagonalWin(char symbol) {
+        int run = 0; //Holding how many values in a row are the given symbol
+        //Looping through the first couple rows only because diagonal must start in this range to be a win
+        for (int i = 0; i < (boardSize - lengthToWin + 1); i++) {
+            run = 0; //Resetting run
+            //Looping through the first couple columns for the same reason
+            for (int j = 0; j < boardSize; j++) {
+                if (gameBoard[i][j] == symbol) { //If the gameBoard matches the given symbol
+                    try { //Try catch in case the diagonal goes outside of the board
+                        //Loop lengthToWin times to check if each value in the diagonal is the given symbol
+                        for (int k = 0; k < lengthToWin; k++) {
+                            //If it is add to run
+                            if (gameBoard[i+k][j+k] == symbol) {
+                                run += 1;
+                            } //If it isn't, break because there isnt enough for a run
+                            else {
+                                break;
+                            }
+                        }
+                        //If run is the right length, the symbol wins
+                        if (run == lengthToWin) {
+                            return true;
+                        }
+                    //Catch out of index exceptions
+                    } catch (Exception e) {
+                        run = 0; //Resetting run
+                    }
+                }
+            }
+        }
+        //If the program gets there the symbol did not win with a diagonal
+        return false;
+    }
+
+    /**
+     * Name: reverseDiagonalWin
+     * Checking if the user won with a reverse diagonal
+     * @param symbol - Checking if this symbol won
+     * @return boolean - If the symbol won
+     */
+    private boolean reverseDiagonalWin(char symbol) {
+        int run = 0; //Holding how many values in a row are the given symbol
+        //Looping through the first couple rows only because diagonal must start in this range to be a win
+        for (int i = 0; i < (boardSize - lengthToWin + 1); i++) {
+            run = 0; //Resetting run
+            //Looping through the first couple columns for the same reason
+            for (int j = 0; j < boardSize; j++) {
+                if (gameBoard[i][j] == symbol) { //If the gameBoard matches the given symbol
+                    try { //Try catch in case the diagonal goes outside of the board
+                        //Loop lengthToWin times to check if each value in the diagonal is the given symbol
+                        for (int k = 0; k < lengthToWin; k++) {
+                            //If it is add to run
+                            if (gameBoard[i+k][j-k] == symbol) {
+                                run += 1;
+                            } //If it isn't, break because there isnt enough for a run
+                            else {
+                                break;
+                            }
+                        }
+                        //If run is the right length, the symbol wins
+                        if (run == lengthToWin) {
+                            return true;
+                        }
+                        //Catch out of index exceptions
+                    } catch (Exception e) {
+                        run = 0; //Resetting run
+                    }
+                }
+            }
+        }
+        //If the program gets there the symbol did not win with a diagonal
+        return false;
+    }
+
+    /**
+     * Name: verticalWin
+     * Checking if the symbol won vertically on the board
+     * @param symbol - The symbol to check for
+     * @return boolean - Did the symbol win
+     */
+    private boolean verticalWin(char symbol) {
         int run = 0; //Holding how many values in a row they got
         //Find if its vertical
         for (int i = 0; i < boardSize; i++) {
@@ -110,8 +203,19 @@ public class Configurations {
             }
             run = 0; //Setting run back to 0 because they didnt win in this row
         }
+        //If it got here there was no vertical win
+        return false;
+    }
 
-        //Find if horizontal
+    /**
+     * Name: hortizontalWin
+     * Checking if the symbol won horizontally on the board
+     * @param symbol - The symbol to check for
+     * @return boolean - Did the symbol win
+     */
+    private boolean horizontalWin(char symbol) {
+        int run = 0; //Holding how many values in a row they got
+        //Find if its vertical
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
                 if (gameBoard[i][j] == symbol) {
@@ -123,47 +227,9 @@ public class Configurations {
                     return true;
                 }
             }
-            run = 0; //Setting run back to 0 because they didnt win in this column
+            run = 0; //Setting run back to 0 because they didnt win in this row
         }
-        //Find if diagonal
-        //A diagonal only has a run when the spaces between one symbol and another is boardSize+1 or boardSize-1, nothing else works
-        //Need to check both diagonals, easiest way is to use the boardString and step forward by a given amount based on which way to look for the diagonal
-        //Since the for loops in the for loop go until the end of the loop, only need to look at the start of the diagonal or boardString.length - lengthtowin-1 * boardsize
-        for (int i = 0; i < (boardString.length() - (lengthToWin-1) * boardSize); i++) {
-            if (boardString.charAt(i) == symbol) {
-                //If you want to look to the diagonal to the left
-                if (Math.floorDiv(((i % boardSize) + boardSize - 1), boardSize) > Math.floorDiv(i, boardSize)) {
-                    //Looping through boardString stepping by boardSize-1 at a time to find if there is a run, if no run, stop
-                    for (int j = i; j < boardString.length(); j = j + boardSize - 1) {
-                        if (boardString.charAt(j) == symbol) {
-                            run += 1;
-                        } else {
-                            run = 0;
-                            break;
-                        }
-                        if (run == lengthToWin) { //If the run == length to win, return true
-                            return true;
-                        }
-                    }
-                }
-                //If you want to look at the diagonal to the right
-                if (Math.floorDiv(((i % boardSize) + boardSize + 1), boardSize) < Math.floorDiv(i + 2 * boardSize, boardSize)) {
-                    //Looping through boardString stepping by boardSize+1 at a time to find if there is a run, if no run, stop
-                    for (int j = i; j < boardString.length(); j = j + boardSize + 1) {
-                        if (boardString.charAt(j) == symbol) {
-                            run += 1;
-                        } else {
-                            run = 0;
-                            break;
-                        }
-                        if (run == lengthToWin) { //If the run == length to win, return true
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        //If no other win conditions are true
+        //If it got here there was no vertical win
         return false;
     }
 
